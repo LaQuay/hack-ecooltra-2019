@@ -10,6 +10,7 @@ import {
 } from 'react-leaflet'
 import HeatmapLayer from '../map_layers/HeatmapLayer'
 import { GreenIcon, OrangeIcon, RedIcon } from '../map_layers/icons'
+import Zones from '../map_layers/zones'
 import EntryAPI from '../api/entryAPI.js'
 import Entry from '../models/entry.js'
 import System from '../models/system.js'
@@ -17,6 +18,8 @@ import System from '../models/system.js'
 const CARTO_BASEMAP = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
 
 export class RealTimeMapTab extends React.Component {
+  zones = Zones
+
   constructor(props) {
     super(props)
 
@@ -62,9 +65,9 @@ export class RealTimeMapTab extends React.Component {
   }
 
   getIconFromRangeValue(rangeValue) {
-    if (rangeValue > 40) {
+    if (rangeValue > 30) {
       return GreenIcon
-    } else if (rangeValue > 25) {
+    } else if (rangeValue > 15) {
       return OrangeIcon
     } else {
       return RedIcon
@@ -79,7 +82,6 @@ export class RealTimeMapTab extends React.Component {
         <Map center={center} zoom={zoom} style={mapStyles}>
           <LayersControl>
             <Basemap attribution="" url={CARTO_BASEMAP} />
-
             <LayersControl.Overlay name="Heatmap" checked>
               <FeatureGroup color="purple">
                 <HeatmapLayer
@@ -91,7 +93,6 @@ export class RealTimeMapTab extends React.Component {
                 />
               </FeatureGroup>
             </LayersControl.Overlay>
-
             <LayersControl.Overlay name="Markers">
               <FeatureGroup color="red">
                 {this.state.entriesRows.map(entry => (
@@ -115,10 +116,14 @@ export class RealTimeMapTab extends React.Component {
                 ))}
               </FeatureGroup>
             </LayersControl.Overlay>
-
             <LayersControl.Overlay name="GeoFences" checked>
               <FeatureGroup color="green">
-                {this.state.systemsRows != '' && <GeoJSON data={this.state.systemsRows} />}
+                {this.state.systemsRows !== '' && <GeoJSON data={this.state.systemsRows} />}
+              </FeatureGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay name="Zones" checked>
+              <FeatureGroup color="blue">
+                <GeoJSON data={this.zones} />
               </FeatureGroup>
             </LayersControl.Overlay>
           </LayersControl>
