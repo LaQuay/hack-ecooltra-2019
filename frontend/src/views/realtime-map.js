@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   FeatureGroup,
+  GeoJSON,
   LayersControl,
   Map,
   Marker,
@@ -11,6 +12,7 @@ import HeatmapLayer from '../map_layers/HeatmapLayer'
 import { GreenIcon, OrangeIcon, RedIcon } from '../map_layers/icons'
 import EntryAPI from '../api/entryAPI.js'
 import Entry from '../models/entry.js'
+import System from '../models/system.js'
 
 const CARTO_BASEMAP = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
 
@@ -20,6 +22,7 @@ export class RealTimeMapTab extends React.Component {
 
     this.state = {
       entriesRows: [],
+      systemsRows: '',
       center: [41.4, 2.155],
       zoom: 12.5,
       motoPoints: []
@@ -41,6 +44,20 @@ export class RealTimeMapTab extends React.Component {
       })
       this.setState({ motoPoints: auxMotoPoints })
       this.setState({ entriesRows: results })
+    })
+
+    EntryAPI.getAllSystems(false, response => {
+      var results = response.message.map(system => {
+        return new System(system.id, system.name, system.geofence)
+      })
+
+      this.setState({
+        systemsRows: {
+          type: 'Feature',
+          properties: {},
+          geometry: JSON.parse(results[0].geofence)
+        }
+      })
     })
   }
 
@@ -96,6 +113,12 @@ export class RealTimeMapTab extends React.Component {
                     </Popup>
                   </Marker>
                 ))}
+              </FeatureGroup>
+            </LayersControl.Overlay>
+
+            <LayersControl.Overlay name="GeoFences" checked>
+              <FeatureGroup color="green">
+                {this.state.systemsRows != '' && <GeoJSON data={this.state.systemsRows} />}
               </FeatureGroup>
             </LayersControl.Overlay>
           </LayersControl>

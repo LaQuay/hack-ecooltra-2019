@@ -20,6 +20,20 @@ class EntryAPI extends ApiServiceBase {
       priority
     )
   }
+
+  getAllSystems(priority, callback) {
+    this.getFromUrl(
+      this.baseUrl + `/systems`,
+      responseJson => {
+        const response = responseJson
+        if (response) {
+          console.log(response)
+          callback(response)
+        }
+      },
+      priority
+    )
+  }
 }
 
 export default new EntryAPI()
