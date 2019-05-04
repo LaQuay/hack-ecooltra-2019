@@ -15,7 +15,7 @@ export class EntryTab extends React.Component {
   componentDidMount() {
     EntryAPI.getAllEntries(false, response => {
       var results = response.message.map(entry => {
-        return new Entry(entry.id, entry.value, entry.date)
+        return new Entry(entry.id, entry.license_plate, entry.position, entry.range)
       })
       this.setState({ entriesRows: results })
     })
@@ -27,9 +27,11 @@ export class EntryTab extends React.Component {
         {this.state.entriesRows.map(entry => {
           return (
             <div key={entry.id}>
-              <dt>{entry.id}</dt>
-              <dd>{entry.value}</dd>
-              <dd>{entry.date}</dd>
+              <dt>{entry.license_plate}</dt>
+              <dd>
+                Coordinates: {entry.position[1]}, {entry.position[0]}
+              </dd>
+              <dd>Range: {entry.range} m</dd>
               <hr />
             </div>
           )

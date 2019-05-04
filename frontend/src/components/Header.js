@@ -12,7 +12,7 @@ class Header extends Component {
             <ul className="navbar-nav">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/entry" activeStyle={{ fontWeight: '600' }}>
-                  Entry
+                  Raw Data
                 </NavLink>
               </li>
               <li className="nav-item">

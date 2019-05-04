@@ -1,10 +1,16 @@
 import axios from 'axios'
 
+import Config from '../config.js'
 import Queue from '../toolbox/queue.js'
 
 class ApiServiceBase {
   constructor() {
     this.queue = new Queue()
+    this.config = {
+      headers: {
+        Authorization: 'Bearer ' + Config.services.electricfeel.token
+      }
+    }
   }
 
   __catchErrorMessage(error) {
@@ -37,12 +43,12 @@ class ApiServiceBase {
     this.queue[priority ? 'unshift' : 'add'](() => {
       const self = this
       axios
-        .get(url)
+        .get(url, this.config)
         .then(response => {
           console.log(url + ' - Response - ' + response.status)
           self.queue.next()
           return {
-            message: response.data.data,
+            message: response.data,
             status: response.status
           }
         })

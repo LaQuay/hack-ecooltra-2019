@@ -1,14 +1,11 @@
 // Model of Entry that match with the API's Model
 
 class entry {
-  constructor(
-    id,
-    value = 'Sample value',
-    date = 'Sample date'
-  ) {
+  constructor(id, license_plate = 'Sample license', position = [], range = 0) {
     this.id = id
-    this.value = value
-    this.date = date
+    this.license_plate = license_plate
+    this.position = position
+    this.range = range
   }
 }
 
