@@ -39,7 +39,7 @@ run-backend-tests: build-backend
 setup:
 	docker-compose -f docker-compose.yml up -d
 	@sleep 1
-	@sh backend/scripts/configure_postgres.sh api-out-of-the-box_postgres_1 api_db
+	@sh backend/scripts/configure_postgres.sh hackecooltra_postgres_1 api_db
 
 setup-tests:
 	docker-compose -f docker-compose.tests.yml -p tests up -d
