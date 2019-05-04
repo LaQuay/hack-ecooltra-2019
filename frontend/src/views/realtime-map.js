@@ -72,7 +72,7 @@ export class RealTimeMapTab extends React.Component {
                   points={this.state.motoPoints}
                   longitudeExtractor={m => m[1]}
                   latitudeExtractor={m => m[0]}
-                  intensityExtractor={m => parseFloat('10')}
+                  intensityExtractor={m => parseFloat('100')}
                 />
               </FeatureGroup>
             </LayersControl.Overlay>
