@@ -20,7 +20,7 @@ export class RealTimeMapTab extends React.Component {
 
     this.state = {
       entriesRows: [],
-      center: [41.4, 2.15],
+      center: [41.4, 2.155],
       zoom: 12.5,
       motoPoints: []
     }
