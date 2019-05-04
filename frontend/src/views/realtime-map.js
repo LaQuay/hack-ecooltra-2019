@@ -61,9 +61,7 @@ export class RealTimeMapTab extends React.Component {
       <div>
         <Map center={center} zoom={zoom} style={mapStyles}>
           <LayersControl>
-            <LayersControl.BaseLayer name="Base" checked>
-              <Basemap attribution="" url={CARTO_BASEMAP} />
-            </LayersControl.BaseLayer>
+            <Basemap attribution="" url={CARTO_BASEMAP} />
 
             <LayersControl.Overlay name="Heatmap" checked>
               <FeatureGroup color="purple">
