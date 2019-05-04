@@ -23,7 +23,7 @@ export class RealTimeMapTab extends React.Component {
         return new Entry(
           entry.id,
           entry.license_plate,
-          entry.position.reverse(),
+          entry.position.reverse(), // Revert for Leaflet
           entry.range / 1000 // Meters to km
         )
       })
@@ -46,7 +46,7 @@ export class RealTimeMapTab extends React.Component {
                   <br />
                   License Plate: {entry.license_plate}
                   <br />
-                  Position: {entry.position}
+                  Coordinates: {entry.position[0]}, {entry.position[1]}
                   <br />
                   Range: {entry.range} km.
                 </div>
