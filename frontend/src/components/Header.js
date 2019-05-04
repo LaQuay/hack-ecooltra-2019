@@ -16,8 +16,13 @@ class Header extends Component {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/map" activeStyle={{ fontWeight: '600' }}>
-                  Map
+                <NavLink className="nav-link" to="/historical" activeStyle={{ fontWeight: '600' }}>
+                  Historical
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/realtime" activeStyle={{ fontWeight: '600' }}>
+                  RealTime
                 </NavLink>
               </li>
             </ul>

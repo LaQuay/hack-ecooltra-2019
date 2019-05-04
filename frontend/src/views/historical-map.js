@@ -7,7 +7,7 @@ import track_points from '../map_layers/track_points'
 
 const CARTO_BASEMAP = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
 
-export class MapTab extends React.Component {
+export class HistoricalMapTab extends React.Component {
   state = {
     center: [41.4, 2.15],
     zoom: 12.5
@@ -50,4 +50,4 @@ const mapStyles = {
   margin: '0 auto'
 }
 
-export default MapTab
+export default HistoricalMapTab
