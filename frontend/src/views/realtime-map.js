@@ -8,6 +8,7 @@ import {
   TileLayer as Basemap
 } from 'react-leaflet'
 import HeatmapLayer from '../map_layers/HeatmapLayer'
+import { GreenIcon, OrangeIcon, RedIcon } from '../map_layers/icons'
 import EntryAPI from '../api/entryAPI.js'
 import Entry from '../models/entry.js'
 
@@ -43,6 +44,16 @@ export class RealTimeMapTab extends React.Component {
     })
   }
 
+  getIconFromRangeValue(rangeValue) {
+    if (rangeValue > 50) {
+      return GreenIcon
+    } else if (rangeValue > 35) {
+      return OrangeIcon
+    } else {
+      return RedIcon
+    }
+  }
+
   render() {
     const { center, zoom } = this.state
 
@@ -69,7 +80,11 @@ export class RealTimeMapTab extends React.Component {
             <LayersControl.Overlay name="Markers">
               <FeatureGroup color="red">
                 {this.state.entriesRows.map(entry => (
-                  <Marker key={`marker-${entry.id}`} position={entry.position}>
+                  <Marker
+                    key={`marker-${entry.id}`}
+                    position={entry.position}
+                    icon={this.getIconFromRangeValue(entry.range)}
+                  >
                     <Popup>
                       <div>
                         ID: {entry.id}
