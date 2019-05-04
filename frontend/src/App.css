@@ -14,3 +14,10 @@
 .nav-link {
   color: white !important;
 }
+
+body {
+  text-align: center;
+  font-family: Roboto, Helvetica, Arial, 'sans-serif';
+  background: #162945;
+  color: white;
+}

@@ -11,12 +11,13 @@ class Header extends Component {
           <div>
             <ul className="navbar-nav">
               <li className="nav-item">
-                <NavLink
-                  className="nav-link"
-                  to="/entry"
-                  activeStyle={{ fontWeight: '600' }}
-                >
+                <NavLink className="nav-link" to="/entry" activeStyle={{ fontWeight: '600' }}>
                   Entry
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/map" activeStyle={{ fontWeight: '600' }}>
+                  Map
                 </NavLink>
               </li>
             </ul>
