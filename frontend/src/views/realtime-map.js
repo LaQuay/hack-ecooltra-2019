@@ -18,8 +18,6 @@ import System from '../models/system.js'
 const CARTO_BASEMAP = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
 
 export class RealTimeMapTab extends React.Component {
-  zones = Zones
-
   constructor(props) {
     super(props)
 
@@ -28,7 +26,9 @@ export class RealTimeMapTab extends React.Component {
       systemsRows: '',
       center: [41.4, 2.155],
       zoom: 12.5,
-      motoPoints: []
+      motoPoints: [],
+      filteredZones: '',
+      test: 0
     }
   }
 
@@ -47,6 +47,8 @@ export class RealTimeMapTab extends React.Component {
       })
       this.setState({ motoPoints: auxMotoPoints })
       this.setState({ entriesRows: results })
+
+      this.updateFilteredZone('None')
     })
 
     EntryAPI.getAllSystems(false, response => {
@@ -71,6 +73,34 @@ export class RealTimeMapTab extends React.Component {
       return OrangeIcon
     } else {
       return RedIcon
+    }
+  }
+
+  updateFilteredZone(typeOfRestriction) {
+    var zones = Zones
+
+    if (typeOfRestriction === 'None') {
+      this.setState({ test: 1 })
+    } else {
+      zones = {
+        type: 'FeatureCollection',
+        features: []
+      }
+      this.setState({ test: 2 })
+    }
+
+    this.setState({ filteredZones: zones })
+  }
+
+  onClick(id, icon) {
+    console.log('I clicked on ' + id)
+
+    if (icon === GreenIcon) {
+      this.updateFilteredZone('All')
+    } else if (icon === OrangeIcon) {
+      this.updateFilteredZone('All')
+    } else if (icon === RedIcon) {
+      this.updateFilteredZone('None')
     }
   }
 
@@ -100,6 +130,7 @@ export class RealTimeMapTab extends React.Component {
                     key={`marker-${entry.id}`}
                     position={entry.position}
                     icon={this.getIconFromRangeValue(entry.range)}
+                    onClick={() => this.onClick(entry.id, this.getIconFromRangeValue(entry.range))}
                   >
                     <Popup>
                       <div>
@@ -109,7 +140,7 @@ export class RealTimeMapTab extends React.Component {
                         <br />
                         Coordinates: {entry.position[0]}, {entry.position[1]}
                         <br />
-                        Range: {entry.range} km.
+                        Range: {entry.range} km
                       </div>
                     </Popup>
                   </Marker>
@@ -123,11 +154,14 @@ export class RealTimeMapTab extends React.Component {
             </LayersControl.Overlay>
             <LayersControl.Overlay name="Zones" checked>
               <FeatureGroup color="blue">
-                <GeoJSON data={this.zones} />
+                {this.state.filteredZones !== '' && (
+                  <GeoJSON id={this.state.test} data={this.state.filteredZones} />
+                )}
               </FeatureGroup>
             </LayersControl.Overlay>
           </LayersControl>
         </Map>
+        {JSON.stringify(this.state.filteredZones)}
       </div>
     )
   }
