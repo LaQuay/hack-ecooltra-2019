@@ -45,9 +45,9 @@ export class RealTimeMapTab extends React.Component {
   }
 
   getIconFromRangeValue(rangeValue) {
-    if (rangeValue > 50) {
+    if (rangeValue > 40) {
       return GreenIcon
-    } else if (rangeValue > 35) {
+    } else if (rangeValue > 25) {
       return OrangeIcon
     } else {
       return RedIcon
