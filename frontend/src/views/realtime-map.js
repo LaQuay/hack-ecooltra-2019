@@ -61,12 +61,12 @@ export class RealTimeMapTab extends React.Component {
                   points={this.state.motoPoints}
                   longitudeExtractor={m => m[1]}
                   latitudeExtractor={m => m[0]}
-                  intensityExtractor={m => parseFloat(m[2])}
+                  intensityExtractor={m => parseFloat('10')}
                 />
               </FeatureGroup>
             </LayersControl.Overlay>
 
-            <LayersControl.Overlay name="Markers" checked>
+            <LayersControl.Overlay name="Markers">
               <FeatureGroup color="red">
                 {this.state.entriesRows.map(entry => (
                   <Marker key={`marker-${entry.id}`} position={entry.position}>
