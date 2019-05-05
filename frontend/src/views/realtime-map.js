@@ -12,6 +12,7 @@ import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 import HeatmapLayer from '../map_layers/HeatmapLayer'
 import { GreenIcon, OrangeIcon, RedIcon } from '../map_layers/icons'
+import ExtremeDiscZones from '../map_layers/extreme-disc-zones'
 import HighDiscZones from '../map_layers/high-disc-zones'
 import MidDiscZones from '../map_layers/mid-disc-zones'
 import EntryAPI from '../api/entryAPI.js'
@@ -72,6 +73,7 @@ export class RealTimeMapTab extends React.Component {
       })
     })
 
+    this.setState({ extremeDiscZones: ExtremeDiscZones })
     this.setState({ highDiscZones: HighDiscZones })
     this.setState({ midDiscZones: MidDiscZones })
     this.setState({ markerStatus: true })
@@ -89,9 +91,7 @@ export class RealTimeMapTab extends React.Component {
 
   updateFilteredZone(typeOfDiscount) {
     if (typeOfDiscount === 'High') {
-      this.setState({ actualDiscZone: 'high' })
-    } else if (typeOfDiscount === 'Mid') {
-      this.setState({ actualDiscZone: 'mid' })
+      this.setState({ actualDiscZone: 'extreme' })
     } else {
       this.setState({ actualDiscZone: 'none' })
     }
@@ -176,10 +176,9 @@ export class RealTimeMapTab extends React.Component {
             {this.state.geofencesStatus && this.state.systemsRows !== '' && (
               <GeoJSON data={this.state.systemsRows} />
             )}
-            {this.state.actualDiscZone === 'high' && <GeoJSON data={this.state.highDiscZones} />}
-            {(this.state.actualDiscZone === 'high' || this.state.actualDiscZone === 'mid') && (
-              <GeoJSON data={this.state.midDiscZones} />
-            )}
+            {this.state.actualDiscZone === 'extreme' && <GeoJSON data={this.state.extremeDiscZones}/>}
+            <GeoJSON data={this.state.highDiscZones} />
+            <GeoJSON data={this.state.midDiscZones} />
           </Map>
         </div>
         {JSON.stringify(this.state.filteredZones)}
