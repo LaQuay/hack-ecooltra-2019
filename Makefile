@@ -19,7 +19,13 @@ build-backend: clean
 
 run-frontend: build-frontend
 	docker run -it -p 3000:3000 -p 35729:35729 \
-	        --name $(NAME)_frontend \
+      --name $(NAME)_frontend \
+			-v $(DOCKER_VOLUME)/frontend:/app \
+			--rm $(DOCKER_NAME_FULL) start
+
+run-frontend-daemon: build-frontend
+	docker run -it -d -p 3000:3000 -p 35729:35729 \
+	    --name $(NAME)_frontend \
 			-v $(DOCKER_VOLUME)/frontend:/app \
 			--rm $(DOCKER_NAME_FULL) start
 
