@@ -8,6 +8,8 @@ import {
   Popup,
   TileLayer as Basemap
 } from 'react-leaflet'
+import Toggle from 'react-toggle'
+import 'react-toggle/style.css'
 import HeatmapLayer from '../map_layers/HeatmapLayer'
 import { GreenIcon, OrangeIcon, RedIcon } from '../map_layers/icons'
 import Zones from '../map_layers/zones'
@@ -30,6 +32,8 @@ export class RealTimeMapTab extends React.Component {
       filteredZones: '',
       test: 0
     }
+
+    this.handleToggle = this.handleToggle.bind(this)
   }
 
   componentDidMount() {
@@ -104,63 +108,73 @@ export class RealTimeMapTab extends React.Component {
     }
   }
 
+  handleToggle(event) {
+    this.setState({ [event.target.id]: event.target.checked })
+  }
+
   render() {
     const { center, zoom } = this.state
+    const labelSpanStyle = {
+      'vertical-align': 'super',
+      'margin-right': '10px'
+    }
 
     return (
-      <div>
-        <Map center={center} zoom={zoom} style={mapStyles}>
-          <LayersControl>
+      <div className="row">
+        <div className="col-md-2">
+          <label>
+            <span style={labelSpanStyle}>eCooltra motos</span>
+            <Toggle id="markerStatus" icons={false} onChange={this.handleToggle} />
+          </label>
+          <label>
+            <span style={labelSpanStyle}>Density map</span>
+            <Toggle id="densityMapStatus" icons={false} onChange={this.handleToggle} />
+          </label>
+          <label>
+            <span style={labelSpanStyle}>Geofence</span>
+            <Toggle id="geofencesStatus" icons={false} onChange={this.handleToggle} />
+          </label>
+        </div>
+        <div className="col-md-10">
+          <Map center={center} zoom={zoom} style={mapStyles}>
             <Basemap attribution="" url={CARTO_BASEMAP} />
-            <LayersControl.Overlay name="Heatmap" checked>
-              <FeatureGroup color="purple">
-                <HeatmapLayer
-                  fitBoundsOnLoad
-                  points={this.state.motoPoints}
-                  longitudeExtractor={m => m[1]}
-                  latitudeExtractor={m => m[0]}
-                  intensityExtractor={m => parseFloat('100')}
-                />
-              </FeatureGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay name="Markers">
-              <FeatureGroup color="red">
-                {this.state.entriesRows.map(entry => (
-                  <Marker
-                    key={`marker-${entry.id}`}
-                    position={entry.position}
-                    icon={this.getIconFromRangeValue(entry.range)}
-                    onClick={() => this.onClick(entry.id, this.getIconFromRangeValue(entry.range))}
-                  >
-                    <Popup>
-                      <div>
-                        ID: {entry.id}
-                        <br />
-                        License Plate: {entry.license_plate}
-                        <br />
-                        Coordinates: {entry.position[0]}, {entry.position[1]}
-                        <br />
-                        Range: {entry.range} km
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </FeatureGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay name="GeoFences" checked>
-              <FeatureGroup color="green">
-                {this.state.systemsRows !== '' && <GeoJSON data={this.state.systemsRows} />}
-              </FeatureGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay name="Zones" checked>
-              <FeatureGroup color="blue">
-                {this.state.filteredZones !== '' && (
-                  <GeoJSON id={this.state.test} data={this.state.filteredZones} />
-                )}
-              </FeatureGroup>
-            </LayersControl.Overlay>
-          </LayersControl>
-        </Map>
+            {this.state.densityMapStatus && (
+              <HeatmapLayer
+                points={this.state.motoPoints}
+                longitudeExtractor={m => m[1]}
+                latitudeExtractor={m => m[0]}
+                intensityExtractor={m => parseFloat('100')}
+              />
+            )}
+            {this.state.markerStatus &&
+              this.state.entriesRows.map(entry => (
+                <Marker
+                  key={`marker-${entry.id}`}
+                  position={entry.position}
+                  icon={this.getIconFromRangeValue(entry.range)}
+                  onClick={() => this.onClick(entry.id, this.getIconFromRangeValue(entry.range))}
+                >
+                  <Popup>
+                    <div>
+                      ID: {entry.id}
+                      <br />
+                      License Plate: {entry.license_plate}
+                      <br />
+                      Coordinates: {entry.position[0]}, {entry.position[1]}
+                      <br />
+                      Range: {entry.range} km
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            {this.state.geofencesStatus && this.state.systemsRows !== '' && (
+              <GeoJSON data={this.state.systemsRows} />
+            )}
+            {this.state.filteredZonesStatus && this.state.filteredZones !== '' && (
+              <GeoJSON id={this.state.test} data={this.state.filteredZones} />
+            )}
+          </Map>
+        </div>
         {JSON.stringify(this.state.filteredZones)}
       </div>
     )
@@ -168,7 +182,7 @@ export class RealTimeMapTab extends React.Component {
 }
 
 const mapStyles = {
-  width: '90vw',
+  width: '75vw',
   height: '80vh',
   margin: '0 auto'
 }
