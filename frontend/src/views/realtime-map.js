@@ -140,6 +140,10 @@ export class RealTimeMapTab extends React.Component {
             <span style={labelSpanStyle}>Geofence</span>
             <Toggle id="geofencesStatus" icons={false} onChange={this.handleToggle} />
           </label>
+          <label>
+            <span style={labelSpanStyle}>Disponibility zones</span>
+            <Toggle id="disponibilityStatus" icons={false} onChange={this.handleToggle} />
+          </label>
         </div>
         <div className="col-md-10">
           <Map center={center} zoom={zoom} style={mapStyles}>
@@ -176,12 +180,20 @@ export class RealTimeMapTab extends React.Component {
             {this.state.geofencesStatus && this.state.systemsRows !== '' && (
               <GeoJSON data={this.state.systemsRows} />
             )}
-            {this.state.actualDiscZone === 'extreme' && <GeoJSON data={this.state.extremeDiscZones}/>}
-            <GeoJSON data={this.state.highDiscZones} />
-            <GeoJSON data={this.state.midDiscZones} />
+            {this.state.disponibilityStatus && this.state.actualDiscZone === 'extreme' && (
+              <GeoJSON data={this.state.extremeDiscZones} style={extremeDispStyle} />
+            )}
+            {this.state.disponibilityStatus && (
+              <div>
+                <GeoJSON data={this.state.highDiscZones} style={highDispStyle} />
+                <GeoJSON data={this.state.midDiscZones} style={medDispStyle} />
+              </div>
+            )}
           </Map>
         </div>
-        {JSON.stringify(this.state.filteredZones)}
+        Made with
+        <em style={{ color: 'red', 'margin-left': '10px', 'margin-right': '10px' }}>❤</em>
+        by iLitriTeam
       </div>
     )
   }
@@ -191,6 +203,17 @@ const mapStyles = {
   width: '75vw',
   height: '80vh',
   margin: '0 auto'
+}
+const extremeDispStyle = {
+  color: 'blue'
+}
+
+const highDispStyle = {
+  color: 'green'
+}
+
+const medDispStyle = {
+  color: 'orange'
 }
 
 export default RealTimeMapTab
