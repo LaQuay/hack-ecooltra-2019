@@ -12,7 +12,8 @@ import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
 import HeatmapLayer from '../map_layers/HeatmapLayer'
 import { GreenIcon, OrangeIcon, RedIcon } from '../map_layers/icons'
-import Zones from '../map_layers/zones'
+import HighDiscZones from '../map_layers/high-disc-zones'
+import MidDiscZones from '../map_layers/mid-disc-zones'
 import EntryAPI from '../api/entryAPI.js'
 import Entry from '../models/entry.js'
 import System from '../models/system.js'
@@ -29,7 +30,9 @@ export class RealTimeMapTab extends React.Component {
       center: [41.4, 2.155],
       zoom: 12.5,
       motoPoints: [],
-      filteredZones: '',
+      highDiscZones: '',
+      midDiscZones: '',
+      actualDiscZone: 'None',
       test: 0
     }
 
@@ -68,6 +71,10 @@ export class RealTimeMapTab extends React.Component {
         }
       })
     })
+
+    this.setState({ highDiscZones: HighDiscZones })
+    this.setState({ midDiscZones: MidDiscZones })
+    this.setState({ markerStatus: true })
   }
 
   getIconFromRangeValue(rangeValue) {
@@ -80,31 +87,25 @@ export class RealTimeMapTab extends React.Component {
     }
   }
 
-  updateFilteredZone(typeOfRestriction) {
-    var zones = Zones
-
-    if (typeOfRestriction === 'None') {
-      this.setState({ test: 1 })
+  updateFilteredZone(typeOfDiscount) {
+    if (typeOfDiscount === 'High') {
+      this.setState({ actualDiscZone: 'high' })
+    } else if (typeOfDiscount === 'Mid') {
+      this.setState({ actualDiscZone: 'mid' })
     } else {
-      zones = {
-        type: 'FeatureCollection',
-        features: []
-      }
-      this.setState({ test: 2 })
+      this.setState({ actualDiscZone: 'none' })
     }
-
-    this.setState({ filteredZones: zones })
   }
 
   onClick(id, icon) {
     console.log('I clicked on ' + id)
 
     if (icon === GreenIcon) {
-      this.updateFilteredZone('All')
-    } else if (icon === OrangeIcon) {
-      this.updateFilteredZone('All')
-    } else if (icon === RedIcon) {
       this.updateFilteredZone('None')
+    } else if (icon === OrangeIcon) {
+      this.updateFilteredZone('Mid')
+    } else if (icon === RedIcon) {
+      this.updateFilteredZone('High')
     }
   }
 
@@ -124,7 +125,12 @@ export class RealTimeMapTab extends React.Component {
         <div className="col-md-2">
           <label>
             <span style={labelSpanStyle}>eCooltra motos</span>
-            <Toggle id="markerStatus" icons={false} onChange={this.handleToggle} />
+            <Toggle
+              id="markerStatus"
+              icons={false}
+              checked={this.state.markerStatus}
+              onChange={this.handleToggle}
+            />
           </label>
           <label>
             <span style={labelSpanStyle}>Density map</span>
@@ -170,8 +176,9 @@ export class RealTimeMapTab extends React.Component {
             {this.state.geofencesStatus && this.state.systemsRows !== '' && (
               <GeoJSON data={this.state.systemsRows} />
             )}
-            {this.state.filteredZonesStatus && this.state.filteredZones !== '' && (
-              <GeoJSON id={this.state.test} data={this.state.filteredZones} />
+            {this.state.actualDiscZone === 'high' && <GeoJSON data={this.state.highDiscZones} />}
+            {(this.state.actualDiscZone === 'high' || this.state.actualDiscZone === 'mid') && (
+              <GeoJSON data={this.state.midDiscZones} />
             )}
           </Map>
         </div>
